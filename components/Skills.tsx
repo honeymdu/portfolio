@@ -8,7 +8,6 @@ const SKILL_GROUPS = [
       { name: "Java", level: 95 },
       { name: "C#", level: 88 },
       { name: "SQL", level: 85 },
-      { name: "TypeScript", level: 65 },
     ],
   },
   {
@@ -19,7 +18,6 @@ const SKILL_GROUPS = [
       { name: ".NET Core", level: 90 },
       { name: "Hibernate ORM", level: 88 },
       { name: "JPA", level: 85 },
-      { name: "React", level: 65 },
       { name: "Maven", level: 80 },
     ],
   },
@@ -28,6 +26,7 @@ const SKILL_GROUPS = [
     color: "amber",
     skills: [
       { name: "Apache Kafka", level: 85 },
+      { name: "RabbitMQ", level: 82 },
       { name: "REST APIs", level: 95 },
       { name: "WebSockets", level: 75 },
     ],
@@ -49,6 +48,7 @@ const SKILL_GROUPS = [
     skills: [
       { name: "Google Cloud Platform", level: 88 },
       { name: "Docker", level: 90 },
+      { name: "Kubernetes", level: 72 },
       { name: "AWS (EC2, CodeCommit)", level: 78 },
       { name: "Azure", level: 75 },
       { name: "Cloud Run", level: 85 },
@@ -160,6 +160,8 @@ export default function Skills() {
           {[
             { name: "Java Backend Development", org: "Certified", color: "indigo" },
             { name: "Docker Essentials", org: "Certified", color: "cyan" },
+            { name: "Spring Boot 0 to 1 — Fundamentals", org: "Certified", color: "emerald" },
+            { name: "Spring Boot 1 to 100 — Expert", org: "Certified", color: "purple" },
           ].map(({ name, org, color }) => (
             <div
               key={name}

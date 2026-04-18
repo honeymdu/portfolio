@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { ArrowDown, Mail, Terminal, Zap, Globe, Cpu, Download } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/SocialIcons";
 
@@ -70,6 +71,20 @@ export default function Hero() {
 
       {/* Main content */}
       <div className="relative z-10 text-center max-w-5xl mx-auto px-4 sm:px-6 py-20">
+        {/* Profile photo */}
+        <div className="flex justify-center mb-6">
+          <div className="relative w-28 h-28 sm:w-32 sm:h-32">
+            <Image
+              src="/profile.jpg"
+              alt="Himanshu Mehra"
+              fill
+              className="rounded-full object-cover ring-4 ring-indigo-500/30 shadow-xl"
+              priority
+            />
+            <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white dark:border-gray-950" />
+          </div>
+        </div>
+
         {/* Available badge */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 text-emerald-700 dark:text-emerald-400 text-sm font-medium mb-8">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
