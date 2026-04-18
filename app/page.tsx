@@ -1,0 +1,29 @@
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import About from "@/components/About";
+import Experience from "@/components/Experience";
+import Projects from "@/components/Projects";
+import SystemDesign from "@/components/SystemDesign";
+import Skills from "@/components/Skills";
+import ApiShowcase from "@/components/ApiShowcase";
+import Contact from "@/components/Contact";
+import Footer from "@/components/Footer";
+
+export default function Home() {
+  return (
+    <>
+      <Navbar />
+      <main>
+        <Hero />
+        <About />
+        <Experience />
+        <Projects />
+        <SystemDesign />
+        <Skills />
+        <ApiShowcase />
+        <Contact />
+      </main>
+      <Footer />
+    </>
+  );
+}
