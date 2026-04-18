@@ -1,9 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState, useTransition, useRef } from "react";
 import { Mail, MapPin, Send, CheckCircle, AlertCircle } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/SocialIcons";
-import { sendContactEmail } from "@/app/actions/contact";
+
+type ContactState = { success?: boolean; error?: string } | null;
+
+const WEB3FORMS_KEY = "f4f71a7c-b1d8-4873-84f3-910a42f30af6";
 
 const CONTACT_LINKS = [
   {
@@ -40,7 +43,49 @@ const colorMap: Record<string, string> = {
 };
 
 function ContactForm() {
-  const [state, action, pending] = useActionState(sendContactEmail, null);
+  const [state, setState] = useState<ContactState>(null);
+  const [isPending, startTransition] = useTransition();
+  const formRef = useRef<HTMLFormElement>(null);
+
+  function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get("name")?.toString().trim();
+    const email = formData.get("email")?.toString().trim();
+    const message = formData.get("message")?.toString().trim();
+
+    if (!name || !email || !message) {
+      setState({ error: "All fields are required." });
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        const body = new FormData();
+        body.append("access_key", WEB3FORMS_KEY);
+        body.append("name", name);
+        body.append("email", email);
+        body.append("message", message);
+        body.append("subject", `Portfolio message from ${name}`);
+        body.append("from_name", name);
+        body.append("botcheck", "");
+
+        const res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body,
+        });
+        const data = await res.json();
+        if (data.success) {
+          setState({ success: true });
+          formRef.current?.reset();
+        } else {
+          setState({ error: data.message ?? "Failed to send. Please email me directly at mehrahoney638@gmail.com." });
+        }
+      } catch {
+        setState({ error: "Failed to send. Please email me directly at mehrahoney638@gmail.com." });
+      }
+    });
+  }
 
   if (state?.success) {
     return (
@@ -57,7 +102,7 @@ function ContactForm() {
   }
 
   return (
-    <form action={action} className="space-y-4">
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="name" className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">
@@ -110,11 +155,11 @@ function ContactForm() {
 
       <button
         type="submit"
-        disabled={pending}
+        disabled={isPending}
         className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-semibold transition-all duration-200 shadow-md shadow-indigo-600/20 hover:shadow-indigo-600/40 hover:-translate-y-0.5"
       >
         <Send className="w-4 h-4" />
-        {pending ? "Sending…" : "Send Message"}
+        {isPending ? "Sending…" : "Send Message"}
       </button>
     </form>
   );

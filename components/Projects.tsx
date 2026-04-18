@@ -44,24 +44,24 @@ const PROJECTS: Project[] = [
     period: "Aug 2025 – Present",
     type: "Production · AI/ML",
     color: "indigo",
-    tagline: "Breaking language barriers in live call centers — in under 500ms.",
+    tagline: "Breaking language barriers in live airline call centers — in under 500ms.",
     problem:
-      "English-speaking call center agents needed to communicate in real time with French, Spanish, Arabic, and Chinese-speaking customers. The challenge: translate live speech bidirectionally with minimal lag, without losing domain-specific terminology (insurance, finance).",
+      "Airline agents speaking English needed to conduct live telephone calls with customers who only speak Spanish, French, Arabic, or Chinese. Each party had to hear the conversation in their own language with minimal latency — across a bidirectional phone + browser audio bridge, in real time.",
     architecture:
-      "Built as a Java microservices cluster behind an API Gateway. Inbound audio from Vonage Voice API is streamed to a transcription service (Google Cloud STT), then passed to a translation microservice, then converted back to speech (Google Cloud TTS). Each step is async and decoupled via message queues. A separate analytics service aggregates transcripts and performance metrics into a live agent dashboard.",
+      "Three Java 21 / Spring Boot 3.5.4 services on Google Cloud Run behind a GCP-managed API Gateway. The Translator Service is the core engine: it opens WebSocket streams from both the agent's browser (PCM16LE, 16kHz) and Vonage (customer phone audio), then routes each audio chunk through a Spring ApplicationEvent pipeline — AudioEvent → SpeechToTextService (Google STT, streaming) → TranscriptEvent → TranslationService (Mono<String>, reactive non-blocking) → TextToSpeechService (Google TTS) → TtsAudioEvent → binary back to the remote party's WebSocket. Active call state is held in a ConcurrentHashMap<String, CallSession> for WebSocket reference management; only serializable fields are flushed to MongoDB on SessionEndEvent. VoIP operations are abstracted behind a CallProviderStrategy interface — Vonage is the current implementation. User Service handles JWT issuance, agent CRUD, and Vonage phone number pool management.",
     challenges: [
-      "Maintaining end-to-end latency below 500ms across 3 networked AI services",
-      "Handling partial speech fragments mid-sentence without breaking translation context",
-      "Fine-tuning domain-specific vocabulary in Google Cloud Translation for insurance/finance terms",
-      "Graceful degradation — fallback mechanisms when any AI service is slow or unavailable",
+      "Bidirectional audio symmetry — agent browser (WebSocket binary) and customer phone (Vonage WebSocket) both run the full STT → Translate → TTS pipeline simultaneously with independent thread pools (audioEventExecutor: 20–40 threads)",
+      "In-memory session bridging — WebSocket references can't be serialized; ConcurrentHashMap holds transient call state while MongoDB stores durable fields, flushed atomically on SessionEndEvent",
+      "Reactive async translation — TranslationService returns Mono<String>, releasing the calling thread during Google Translate API latency and resuming on response without blocking audio pipeline",
+      "AOP-based role enforcement — @Authorize annotation + AuthorizationAspect keeps controller logic clean; UserContextInterceptor populates ThreadLocal from JWT without any controller awareness",
     ],
     scaling:
-      "Stateless Java services deployed on Google Cloud Run with autoscaling based on concurrent call volume. Message queues absorb burst traffic. Circuit breakers prevent cascading failures.",
-    stack: ["Java", "Spring Boot", "Google Cloud STT/TTS", "Google Cloud Translation", "Vonage API", "Kafka", "Docker", "Google Cloud Run", "PostgreSQL"],
+      "Stateless Translator Service instances on Google Cloud Run autoscale on concurrent call volume. No external message broker between pipeline stages — Spring ApplicationEventPublisher keeps STT→Translate→TTS in-process, eliminating network hops. audioEventExecutor handles up to 40 concurrent STT pipelines each with a 500-event queue. MongoDB stores completed call sessions and full utterance history per conversationUuid.",
+    stack: ["Java 21", "Spring Boot 3.5.4", "Spring Reactor", "Google Cloud STT", "Google Cloud TTS", "Google Cloud Translation", "Vonage API", "MongoDB", "Docker", "Google Cloud Run", "GCP API Gateway", "React 19", "TypeScript"],
     metrics: [
       { label: "Translation Accuracy", value: "~90%" },
       { label: "Language Pairs", value: "4" },
-      { label: "Architecture", value: "Event-Driven" },
+      { label: "Audio Latency", value: "< 500ms" },
     ],
   },
   {
@@ -70,27 +70,28 @@ const PROJECTS: Project[] = [
     title: "PrepFi — B2B EdTech Microservices Platform",
     subtitle: "Servoedge Technologies · Project Lead",
     period: "Feb 2025 – Present",
-    type: "Production · .NET",
+    type: "Production · .NET 8",
     color: "purple",
     tagline: "A microservices-first EdTech platform built for institutional scale.",
     problem:
-      "Educational institutions needed a unified platform for teachers to create/assign tests, track student performance in granular detail, and generate insightful reports — while parents needed restricted visibility into their child's progress only.",
+      "Educational institutions needed a unified platform for teachers to create/assign AI-assisted quizzes, track student performance in granular detail, and generate insightful reports — while parents needed restricted visibility into their child's progress only, and students needed a gamified tournament experience.",
     architecture:
-      "Decomposed into discrete .NET Core microservices: Auth Service, Test Engine, Assessment Processor, Report Generator, and Notification Service. Each owns its database. An API Gateway routes role-based traffic. Background workers handle report generation async. React frontend consumes APIs via versioned REST contracts.",
+      "7 .NET 8 microservices each owning its own PostgreSQL database: AuthService (JWT issuance + Redis session management), UserService (profiles, roles, org hierarchy), QuizService (quizzes, questions, AI job tracking, book ingestion), SubscriptionService, TournamentService (leaderboards + cron scheduling), UserDashboardService (analytics + streaks), and UserRegistrationService. Two Ocelot API gateways (public + admin) use Netflix Eureka for service discovery with RoundRobin load balancing. Services communicate via Refit-typed HTTP clients (Polly retry + timeout) for sync calls and RabbitMQ for all AI workload orchestration. AI capabilities — PDF ingestion, question generation, answer evaluation — are external services integrated exclusively via RabbitMQ queues.",
     challenges: [
-      "Implementing RBAC across microservices without duplicating authorization logic (centralized token validation)",
-      "Report generation was slow — profiled and fixed N+1 query patterns, added compound indexes, and moved heavy aggregation to background jobs",
-      "Gamification engine required consistent state across services — solved with event sourcing for tournament state changes",
-      "Schema design for multi-tenant academic data without row-level data leaks",
+      "Per-user JWT signing keys (UserTokenSalts table) — each user gets a unique HS256 key, limiting blast radius of compromise and enabling per-user revocation without global token invalidation",
+      "AI integration is entirely async via RabbitMQ — app tier never blocks on AI calls (seconds to minutes); a StaleJobWatchdog hosted service auto-fails jobs with no response within threshold",
+      "RBAC across 7 services without duplicated logic — centralized at Ocelot gateway, role claims propagated downstream via X-User-Id / X-User-Role / X-Org-Code headers",
+      "Dual EF Core / ADO.NET strategy per service — ORM for standard CRUD, raw Npgsql for complex aggregations — switchable via config without rewriting service logic",
     ],
     scaling:
-      "Each microservice scales independently behind a load balancer. Report generation and notification dispatching are decoupled into async background services (Hangfire), preventing UI-layer blocking under load.",
-    stack: [".NET Core", "C#", "React", "SQL Server", "Hangfire", "REST APIs", "Docker", "JWT", "Entity Framework"],
+      "Each service scales independently behind the Ocelot gateway, discovered via Eureka — no hardcoded URLs. RabbitMQ absorbs AI workload bursts and decouples AI services from application tier entirely. Redis caches JWT signing keys (60-min TTL) to avoid per-request DB hits at gateway.",
+    stack: [".NET 8", "C#", "React", "PostgreSQL", "Redis", "RabbitMQ", "Ocelot", "Eureka", "Refit", "Polly", "Docker", "JWT", "Entity Framework Core", "AWS S3"],
     metrics: [
       { label: "Report Speed", value: "+45%" },
       { label: "User Roles", value: "3" },
-      { label: "Services", value: "5+" },
+      { label: "Services", value: "7" },
     ],
+    live: "https://prepfi.ai",
   },
   {
     id: "uber",

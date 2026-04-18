@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Copy, Check, Terminal } from "lucide-react";
 
-type ApiTab = "translate" | "prepfi" | "ride";
+type ApiTab = "translate" | "zomato" | "ride";
 
 interface Endpoint {
   method: "POST" | "GET" | "PUT" | "DELETE" | "PATCH";
@@ -16,90 +16,91 @@ interface Endpoint {
 
 const API_GROUPS: Record<ApiTab, { title: string; base: string; color: string; endpoints: Endpoint[] }> = {
   translate: {
-    title: "Voice Translation API",
-    base: "https://api.voicetranslate.internal/v1",
+    title: "Voice Translator API",
+    base: "https://translator.ezeeflights.internal/api",
     color: "indigo",
     endpoints: [
       {
         method: "POST",
-        path: "/calls/initiate",
-        description: "Start a new translation call session with source and target language config.",
+        path: "/call/create",
+        description: "Agent initiates an outbound call. Translator Service calls Vonage via CallProviderStrategy, receives a conversationUuid, and returns the WebSocket endpoint the agent browser should connect to for audio streaming.",
         requestBody: JSON.stringify(
           {
             agentId: "agent_9f3a8c",
-            inboundNumber: "+15551234567",
-            sourceLanguage: "en-US",
-            targetLanguage: "fr-FR",
-            domain: "insurance",
-            callbackUrl: "https://agent.dashboard.internal/webhook/transcript",
+            toNumber: "+33612345678",
+            targetLanguageVonage: "fr-FR",
+            targetLanguageAgent: "en-US",
+            preferredVoiceVonage: "fr-FR-Standard-A",
+            preferredVoiceAgent: "en-US-Standard-B",
+            translationEnabled: true,
           },
           null,
           2
         ),
         response: JSON.stringify(
           {
-            callId: "call_2f4e9a1b",
-            sessionToken: "eyJhbGciOiJIUzI1NiJ9...",
-            streamEndpoint: "wss://stream.voicetranslate.internal/call_2f4e9a1b",
-            status: "ACTIVE",
-            estimatedLatencyMs: 380,
-            createdAt: "2025-08-15T10:32:01Z",
+            conversationUuid: "CON-4f2e9a1b-8c3d",
+            callUuid: "CALL-7b3e2f",
+            status: "RINGING",
+            agentStreamEndpoint: "wss://translator.ezeeflights.internal/agent_stream?conversation_uuid=CON-4f2e9a1b-8c3d",
+            message: "Connect browser WebSocket to agentStreamEndpoint and stream PCM16LE 16kHz mono audio.",
           },
           null,
           2
         ),
-        notes: "Returns a WebSocket endpoint for real-time transcript streaming.",
-      },
-      {
-        method: "GET",
-        path: "/calls/{callId}/transcripts",
-        description: "Retrieve full translated transcript log for a completed call.",
-        response: JSON.stringify(
-          {
-            callId: "call_2f4e9a1b",
-            duration: 312,
-            totalSegments: 47,
-            transcripts: [
-              {
-                segmentId: 1,
-                speakerRole: "AGENT",
-                originalText: "Good morning, how can I help you today?",
-                translatedText: "Bonjour, comment puis-je vous aider aujourd'hui?",
-                sourceLanguage: "en-US",
-                targetLanguage: "fr-FR",
-                confidence: 0.96,
-                latencyMs: 412,
-                timestamp: "2025-08-15T10:32:08Z",
-              },
-            ],
-            averageConfidence: 0.913,
-            averageLatencyMs: 394,
-          },
-          null,
-          2
-        ),
+        notes: "Agent browser opens WebSocket to agentStreamEndpoint, sends binary PCM frames. Server pushes text control messages back: agent-transcript, lang-change, translation-mode.",
       },
       {
         method: "POST",
-        path: "/models/fine-tune/evaluate",
-        description: "Evaluate domain-specific translation accuracy against a golden test set.",
+        path: "/call/language/{conversationUuid}",
+        description: "Change target language mid-call without interrupting the audio stream. Fires a LanguageChangeEvent that reinitializes the STT and TTS sessions for the affected call leg.",
         requestBody: JSON.stringify(
           {
-            domain: "insurance",
-            languagePair: "en-fr",
-            testSetId: "ts_insurance_fr_v3",
+            targetLanguageVonage: "es-ES",
+            preferredVoiceVonage: "es-ES-Standard-A",
           },
           null,
           2
         ),
         response: JSON.stringify(
           {
-            evaluationId: "eval_9a3c",
-            bleuScore: 0.89,
-            domainAccuracy: 0.913,
-            terminologyPrecision: 0.945,
-            testedSamples: 1200,
-            status: "COMPLETED",
+            conversationUuid: "CON-4f2e9a1b-8c3d",
+            updated: true,
+            targetLanguageVonage: "es-ES",
+            message: "Language change applied. STT and TTS sessions reinitialized for customer leg.",
+          },
+          null,
+          2
+        ),
+        notes: "LanguageChangeEvent is dispatched in-process via Spring ApplicationEventPublisher — no call interruption.",
+      },
+      {
+        method: "GET",
+        path: "/call/session/{conversationUuid}",
+        description: "Fetch full call session including embedded utterance history. Active calls are served from ConcurrentHashMap; completed calls from MongoDB.",
+        response: JSON.stringify(
+          {
+            conversationUuid: "CON-4f2e9a1b-8c3d",
+            agentId: "agent_9f3a8c",
+            callStatus: "COMPLETED",
+            callDurationSeconds: 312,
+            targetLanguageAgent: "en-US",
+            targetLanguageVonage: "fr-FR",
+            translationEnabled: true,
+            callUterances: [
+              {
+                speaker: "AGENT",
+                originalText: "Good morning, how can I help you?",
+                translatedText: "Bonjour, comment puis-je vous aider?",
+                timestamp: "2025-08-15T10:32:08Z",
+              },
+              {
+                speaker: "CUSTOMER",
+                originalText: "Je voudrais changer mon vol.",
+                translatedText: "I would like to change my flight.",
+                timestamp: "2025-08-15T10:32:14Z",
+              },
+            ],
           },
           null,
           2
@@ -107,84 +108,107 @@ const API_GROUPS: Record<ApiTab, { title: string; base: string; color: string; e
       },
     ],
   },
-  prepfi: {
-    title: "PrepFi EdTech API",
-    base: "https://api.prepfi.internal/v1",
-    color: "purple",
+  zomato: {
+    title: "Zomato Clone API",
+    base: "https://api.zotatofoods.internal/v1",
+    color: "emerald",
     endpoints: [
       {
         method: "POST",
-        path: "/tests/assign",
-        description: "Teacher assigns a test to a student group with configurable parameters.",
+        path: "/restaurants/nearby",
+        description: "Find open restaurants within a radius using PostGIS spatial index. Results ranked by order priority and restaurant priority score.",
         requestBody: JSON.stringify(
           {
-            teacherId: "tchr_84a2c1",
-            testTemplateId: "tpl_math_q3_2025",
-            studentGroupId: "grp_grade9_a",
-            scheduledAt: "2025-09-10T09:00:00Z",
-            durationMinutes: 60,
-            randomizeQuestions: true,
-            enableTournamentMode: false,
+            location: { lat: 28.6139, lng: 77.209 },
+            radiusKm: 5,
+            cuisine: "NORTH_INDIAN",
+            sortBy: "RELEVANCE",
           },
           null,
           2
         ),
         response: JSON.stringify(
           {
-            assignmentId: "asgn_c7f2d9",
-            status: "SCHEDULED",
-            affectedStudents: 34,
-            notificationsQueued: 34,
-            testStartsAt: "2025-09-10T09:00:00Z",
-            reportAvailableAfter: "2025-09-10T10:15:00Z",
+            total: 12,
+            restaurants: [
+              {
+                restaurantId: "rst_4a8c2f",
+                name: "Spice Garden",
+                distanceKm: 1.4,
+                etaMinutes: 28,
+                rating: 4.3,
+                cuisine: ["NORTH_INDIAN", "CHINESE"],
+                isOpen: true,
+                priorityScore: 0.91,
+              },
+            ],
+            searchRadiusKm: 5,
+            center: { lat: 28.6139, lng: 77.209 },
           },
           null,
           2
         ),
-        notes: "Notification service dispatches alerts to students asynchronously.",
+        notes: "Uses PostGIS ST_DWithin on a spatial index — sub-50ms lookup regardless of restaurant count.",
+      },
+      {
+        method: "POST",
+        path: "/orders/place",
+        description: "Place an order. Triggers the order allocation strategy — assigns to best-fit restaurant based on order priority and restaurant load.",
+        requestBody: JSON.stringify(
+          {
+            customerId: "cust_9b3e1a",
+            restaurantId: "rst_4a8c2f",
+            items: [
+              { itemId: "itm_butter_chicken", quantity: 2, notes: "extra spicy" },
+              { itemId: "itm_naan", quantity: 4 },
+            ],
+            deliveryAddress: { lat: 28.6211, lng: 77.2018, label: "Home" },
+            paymentMethod: "WALLET",
+          },
+          null,
+          2
+        ),
+        response: JSON.stringify(
+          {
+            orderId: "ord_7c4f2b",
+            status: "CONFIRMED",
+            estimatedDeliveryMins: 35,
+            assignedRestaurant: "rst_4a8c2f",
+            fare: { subtotal: 480, deliveryFee: 30, total: 510, currency: "INR" },
+            paymentStatus: "DEBITED",
+            trackingEndpoint: "/orders/ord_7c4f2b/track",
+          },
+          null,
+          2
+        ),
+        notes: "Wallet debit uses optimistic locking to prevent double-spend on concurrent orders.",
       },
       {
         method: "GET",
-        path: "/reports/student/{studentId}/summary",
-        description: "Parent or teacher fetches aggregated performance summary for a student.",
+        path: "/orders/{orderId}/track",
+        description: "Real-time order tracking — delivery partner location via OSRM, live ETA recalculation, and order state machine transitions.",
         response: JSON.stringify(
           {
-            studentId: "std_7b3e2f",
-            studentName: "Arjun Sharma",
-            overallScore: 82.4,
-            rank: 7,
-            totalStudents: 34,
-            subjectBreakdown: [
-              { subject: "Mathematics", avgScore: 88.5, testsAttempted: 5 },
-              { subject: "Science", avgScore: 76.2, testsAttempted: 4 },
+            orderId: "ord_7c4f2b",
+            status: "OUT_FOR_DELIVERY",
+            deliveryPartner: {
+              name: "Ravi S.",
+              phone: "+91 98XXXXXXXX",
+              currentLocation: { lat: 28.617, lng: 77.205 },
+              distanceToCustomerKm: 0.8,
+              etaMinutes: 7,
+            },
+            timeline: [
+              { state: "CONFIRMED", at: "2025-09-10T12:00:01Z" },
+              { state: "PREPARING", at: "2025-09-10T12:02:14Z" },
+              { state: "PICKED_UP", at: "2025-09-10T12:28:45Z" },
+              { state: "OUT_FOR_DELIVERY", at: "2025-09-10T12:29:03Z" },
             ],
-            improvement: "+12.3%",
-            generatedAt: "2025-09-11T08:00:00Z",
           },
           null,
           2
         ),
-      },
-      {
-        method: "GET",
-        path: "/tournaments/leaderboard/{tournamentId}",
-        description: "Fetch real-time tournament rankings with score and completion status.",
-        response: JSON.stringify(
-          {
-            tournamentId: "trn_fall2025_q3",
-            status: "ACTIVE",
-            endsAt: "2025-09-15T18:00:00Z",
-            totalParticipants: 128,
-            leaderboard: [
-              { rank: 1, studentName: "Priya K.", score: 980, timeTakenSecs: 2840, badge: "GOLD" },
-              { rank: 2, studentName: "Arjun S.", score: 965, timeTakenSecs: 3012, badge: "SILVER" },
-              { rank: 3, studentName: "Rohit M.", score: 940, timeTakenSecs: 2950, badge: "BRONZE" },
-            ],
-            lastUpdated: "2025-09-14T14:22:31Z",
-          },
-          null,
-          2
-        ),
+        notes: "OSRM recalculates ETA on each location ping. State machine ensures no invalid transitions (e.g. DELIVERED → PREPARING).",
       },
     ],
   },

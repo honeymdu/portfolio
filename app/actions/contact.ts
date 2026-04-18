@@ -22,37 +22,34 @@ export async function sendContactEmail(
     return { error: "Please enter a valid email address." };
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
+  const accessKey = process.env.WEB3FORMS_ACCESS_KEY;
 
-  if (!apiKey) {
-    // Dev fallback — log to console when RESEND_API_KEY is not set
-    console.log("[Contact Form]", { name, email, message });
+  if (!accessKey) {
+    return { error: "Contact form is not configured yet. Please email me directly at mehrahoney638@gmail.com." };
+  }
+
+  try {
+    const res = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        access_key: accessKey,
+        subject: `Portfolio message from ${name}`,
+        from_name: name,
+        email,
+        message,
+        botcheck: false,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      return { error: "Failed to send. Please email me directly at mehrahoney638@gmail.com." };
+    }
+
     return { success: true };
+  } catch {
+    return { error: "Network error. Please email me directly at mehrahoney638@gmail.com." };
   }
-
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      from: "Portfolio Contact <onboarding@resend.dev>",
-      to: ["mehrahoney638@gmail.com"],
-      reply_to: email,
-      subject: `Portfolio message from ${name}`,
-      html: `
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, "<br>")}</p>
-      `,
-    }),
-  });
-
-  if (!res.ok) {
-    return { error: "Failed to send. Please email me directly at mehrahoney638@gmail.com." };
-  }
-
-  return { success: true };
 }

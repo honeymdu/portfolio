@@ -5,7 +5,6 @@ import Experience from "@/components/Experience";
 import Projects from "@/components/Projects";
 import SystemDesign from "@/components/SystemDesign";
 import Skills from "@/components/Skills";
-import ApiShowcase from "@/components/ApiShowcase";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
@@ -20,7 +19,6 @@ export default function Home() {
         <Projects />
         <SystemDesign />
         <Skills />
-        <ApiShowcase />
         <Contact />
       </main>
       <Footer />
