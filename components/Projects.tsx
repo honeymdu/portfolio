@@ -6,6 +6,7 @@ import {
   BookOpen,
   Car,
   Users,
+  UtensilsCrossed,
   ExternalLink,
   ChevronDown,
   ChevronUp,
@@ -121,6 +122,35 @@ const PROJECTS: Project[] = [
     github: "https://github.com/honeymdu/UberApp",
   },
   {
+    id: "zomato",
+    icon: UtensilsCrossed,
+    title: "Zomato Clone — Food Ordering Backend",
+    subtitle: "Personal Project",
+    period: "2023",
+    type: "OSS · Spring Boot",
+    color: "emerald",
+    tagline: "Restaurant discovery, smart order routing, and delivery optimization in one backend.",
+    problem:
+      "Build a production-grade food delivery backend that solves order-to-delivery assignment efficiently: matching orders to restaurants and delivery partners based on priority, proximity, and load — while keeping delivery times minimal.",
+    architecture:
+      "Spring Boot monolith with clear domain separation: Auth, Restaurant, Order, Delivery, Wallet, Notification. OSRM handles delivery route calculation. PostGIS stores and queries restaurant/user geospatial data. An order allocation strategy based on restaurant priority and order priority routes jobs optimally. JWT secures all endpoints.",
+    challenges: [
+      "Order assignment strategy — custom allocation algorithm reducing delivery time by up to 50%",
+      "Geospatial restaurant lookup using PostGIS spatial indexes for sub-50ms nearest-restaurant queries",
+      "Wallet concurrency — optimistic locking to prevent double-spend on simultaneous payments",
+      "Email-based offer + payment link flow for order confirmation and policy delivery",
+    ],
+    scaling:
+      "Stateless service layers behind a reverse proxy. Read-heavy restaurant/location queries served from geo-indexed cache. Delivery state machine ensures consistency across async assignment steps.",
+    stack: ["Java", "Spring Boot", "PostgreSQL", "PostGIS", "OSRM API", "Spring Security", "JWT", "Maven", "Hibernate"],
+    metrics: [
+      { label: "Delivery Time Cut", value: "~50%" },
+      { label: "Pattern", value: "Strategy" },
+      { label: "DB", value: "PostGIS" },
+    ],
+    github: "https://github.com/honeymdu/zotatoFoods",
+  },
+  {
     id: "linkedin",
     icon: Users,
     title: "LinkedIn Clone — Social Graph Microservices",
@@ -178,6 +208,13 @@ const colorVariants: Record<string, { bg: string; border: string; badge: string;
     badge: "bg-cyan-100 dark:bg-cyan-900/50 text-cyan-700 dark:text-cyan-300",
     tag: "bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300",
     accent: "text-cyan-600 dark:text-cyan-400",
+  },
+  emerald: {
+    bg: "bg-emerald-50 dark:bg-emerald-950/20",
+    border: "border-emerald-200 dark:border-emerald-800/40",
+    badge: "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300",
+    tag: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300",
+    accent: "text-emerald-600 dark:text-emerald-400",
   },
 };
 

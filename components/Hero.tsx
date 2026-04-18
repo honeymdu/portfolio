@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowDown, Mail, Terminal, Zap, Globe, Cpu } from "lucide-react";
+import { ArrowDown, Mail, Terminal, Zap, Globe, Cpu, Download } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/SocialIcons";
 
 const TYPING_STRINGS = [
@@ -113,6 +113,14 @@ export default function Hero() {
             className="px-8 py-3.5 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200 hover:-translate-y-0.5"
           >
             Get In Touch
+          </a>
+          <a
+            href="/resume.pdf"
+            download
+            className="flex items-center gap-2 px-8 py-3.5 rounded-xl border border-indigo-300 dark:border-indigo-700 text-indigo-600 dark:text-indigo-400 font-semibold text-sm hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition-all duration-200 hover:-translate-y-0.5"
+          >
+            <Download className="w-4 h-4" />
+            Resume
           </a>
         </div>
 

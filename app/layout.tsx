@@ -8,6 +8,8 @@ const inter = Inter({
   display: "swap",
 });
 
+const BASE_URL = "https://himanshu-mehra.dev";
+
 export const metadata: Metadata = {
   title: "Himanshu Mehra — Backend Engineer",
   description:
@@ -23,11 +25,29 @@ export const metadata: Metadata = {
     "AI Integration",
   ],
   authors: [{ name: "Himanshu Mehra" }],
+  metadataBase: new URL(BASE_URL),
   openGraph: {
     title: "Himanshu Mehra — Backend Engineer",
     description:
       "Senior Backend Engineer building scalable microservices, real-time AI communication systems, and cloud-native platforms.",
     type: "website",
+    url: BASE_URL,
+    siteName: "Himanshu Mehra Portfolio",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Himanshu Mehra — Backend Engineer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Himanshu Mehra — Backend Engineer",
+    description:
+      "Senior Backend Engineer: microservices, real-time AI, cloud-native architecture. Java · .NET · Spring Boot.",
+    images: ["/og-image.png"],
   },
 };
 
