@@ -116,8 +116,10 @@ export default function Experience() {
             return (
               <div
                 key={job.company}
-                className={`relative rounded-2xl border ${colors.border} bg-gray-50 dark:bg-gray-900/40 p-6 sm:p-8 hover:shadow-lg dark:hover:shadow-gray-900 transition-shadow duration-300`}
+                className={`relative rounded-2xl border ${colors.border} bg-gray-50/80 dark:bg-gray-900/50 p-6 sm:p-8 hover:shadow-xl dark:hover:shadow-gray-950 transition-all duration-300 overflow-hidden`}
               >
+                {/* Left accent bar */}
+                <div className={`absolute left-0 top-6 bottom-6 w-1 rounded-full ${job.color === "indigo" ? "bg-gradient-to-b from-indigo-500 to-purple-500" : "bg-gradient-to-b from-purple-500 to-pink-500"}`} />
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
                   <div className="flex items-start gap-4">
@@ -140,7 +142,7 @@ export default function Experience() {
 
                 {/* Highlights */}
                 <ul className="space-y-3 mb-6">
-                  {job.highlights.map(({ icon: Icon, text }, i) => (
+                  {job.highlights.map(({ text }, i) => (
                     <li key={i} className="flex items-start gap-3">
                       <span className={`mt-1.5 w-1.5 h-1.5 rounded-full ${colors.dot} flex-shrink-0`} />
                       <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{text}</p>

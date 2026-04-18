@@ -113,7 +113,7 @@ export default function Skills() {
           {SKILL_GROUPS.map(({ category, color, skills }) => (
             <div
               key={category}
-              className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5"
+              className="bg-white dark:bg-gray-900/80 rounded-2xl border border-gray-200/80 dark:border-gray-800/60 p-5 hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-lg dark:hover:shadow-gray-950 transition-all duration-200"
             >
               <h3 className={`text-xs font-bold uppercase tracking-widest mb-4 ${badgeColorMap[color].split(" ").slice(2).join(" ")}`}>
                 {category}

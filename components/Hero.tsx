@@ -52,8 +52,10 @@ export default function Hero() {
       {/* Background grid */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
 
-      {/* Glow orb */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-indigo-500/10 dark:bg-indigo-500/5 blur-3xl pointer-events-none" />
+      {/* Glow orbs */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-indigo-500/10 dark:bg-indigo-500/6 blur-3xl pointer-events-none" />
+      <div className="absolute top-[-10%] right-[-5%] w-[400px] h-[400px] rounded-full bg-purple-500/8 dark:bg-purple-500/6 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[-5%] left-[-5%] w-[400px] h-[400px] rounded-full bg-cyan-500/6 dark:bg-cyan-500/5 blur-[100px] pointer-events-none" />
 
       {/* Floating tech badges */}
       <div className="absolute top-24 left-8 lg:left-24 hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-800/50 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 text-xs font-medium animate-float">
@@ -73,15 +75,18 @@ export default function Hero() {
       <div className="relative z-10 text-center max-w-5xl mx-auto px-4 sm:px-6 py-20">
         {/* Profile photo */}
         <div className="flex justify-center mb-6">
-          <div className="relative w-28 h-28 sm:w-32 sm:h-32">
-            <Image
-              src="/profile.jpg"
-              alt="Himanshu Mehra"
-              fill
-              className="rounded-full object-cover ring-4 ring-indigo-500/30 shadow-xl"
-              priority
-            />
-            <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white dark:border-gray-950" />
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-500 blur-xl opacity-35 scale-110" />
+            <div className="relative w-28 h-28 sm:w-32 sm:h-32">
+              <Image
+                src="/profile.jpg"
+                alt="Himanshu Mehra"
+                fill
+                className="rounded-full object-cover ring-2 ring-indigo-500/40 shadow-2xl"
+                priority
+              />
+              <span className="absolute bottom-1.5 right-1.5 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white dark:border-gray-950 shadow-lg shadow-emerald-500/40" />
+            </div>
           </div>
         </div>
 
@@ -92,8 +97,11 @@ export default function Hero() {
         </div>
 
         {/* Name */}
-        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
-          Himanshu Mehra
+        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-4">
+          Himanshu{" "}
+          <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 bg-clip-text text-transparent">
+            Mehra
+          </span>
         </h1>
 
         {/* Typing subtitle */}
@@ -119,7 +127,7 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
           <a
             href="#projects"
-            className="px-8 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm transition-all duration-200 shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:-translate-y-0.5"
+            className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold text-sm transition-all duration-200 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-0.5"
           >
             View Projects
           </a>
@@ -140,11 +148,11 @@ export default function Hero() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto mb-12">
-          {STATS.map(({ value, label }) => (
-            <div key={label} className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold gradient-text mb-1">{value}</div>
-              <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-500">{label}</div>
+        <div className="flex items-stretch max-w-2xl mx-auto mb-12 bg-gray-50/80 dark:bg-gray-900/60 border border-gray-200/60 dark:border-gray-800/60 rounded-2xl backdrop-blur-sm overflow-hidden shadow-sm">
+          {STATS.map(({ value, label }, i) => (
+            <div key={label} className={`flex-1 py-4 text-center ${i < STATS.length - 1 ? "border-r border-gray-200/60 dark:border-gray-800/60" : ""}`}>
+              <div className="text-2xl sm:text-3xl font-bold gradient-text mb-0.5">{value}</div>
+              <div className="text-xs text-gray-400 dark:text-gray-500 font-medium">{label}</div>
             </div>
           ))}
         </div>
