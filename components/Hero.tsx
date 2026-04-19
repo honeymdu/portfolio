@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ArrowDown, Mail, Terminal, Zap, Globe, Cpu, Download } from "lucide-react";
+import { Mail, Terminal, Zap, Globe, Cpu, Download } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/SocialIcons";
 
 const TYPING_STRINGS = [
@@ -186,14 +186,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <a
-        href="#about"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors animate-bounce"
-      >
-        <span className="text-xs font-medium tracking-widest uppercase">Scroll</span>
-        <ArrowDown className="w-4 h-4" />
-      </a>
     </section>
   );
 }
