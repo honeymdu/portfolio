@@ -1,27 +1,5 @@
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Experience from "@/components/Experience";
-import Projects from "@/components/Projects";
-import SystemDesign from "@/components/SystemDesign";
-import Skills from "@/components/Skills";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <>
-      <Navbar />
-      <main>
-        <Hero />
-        <About />
-        <Experience />
-        <Projects />
-        <SystemDesign />
-        <Skills />
-        <Contact />
-      </main>
-      <Footer />
-    </>
-  );
+  redirect("/v2");
 }
