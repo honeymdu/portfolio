@@ -19,7 +19,12 @@ const STATS = [
   { value: "1M+", label: "Concurrent User Design" },
 ];
 
-export default function Hero() {
+interface HeroProps {
+  projectsHref?: string;
+  contactHref?: string;
+}
+
+export default function Hero({ projectsHref = "#projects", contactHref = "#contact" }: HeroProps) {
   const [typingIndex, setTypingIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -126,13 +131,13 @@ export default function Hero() {
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
           <a
-            href="#projects"
+            href={projectsHref}
             className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold text-sm transition-all duration-200 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-0.5"
           >
             View Projects
           </a>
           <a
-            href="#contact"
+            href={contactHref}
             className="px-8 py-3.5 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200 hover:-translate-y-0.5"
           >
             Get In Touch
