@@ -7,6 +7,7 @@ import {
   Car,
   Users,
   UtensilsCrossed,
+  Plane,
   ExternalLink,
   ChevronDown,
   ChevronUp,
@@ -87,11 +88,40 @@ const PROJECTS: Project[] = [
       "Each service scales independently behind the Ocelot gateway, discovered via Eureka — no hardcoded URLs. RabbitMQ absorbs AI workload bursts and decouples AI services from application tier entirely. Redis caches JWT signing keys (60-min TTL) to avoid per-request DB hits at gateway.",
     stack: [".NET 8", "C#", "React", "PostgreSQL", "Redis", "RabbitMQ", "Ocelot", "Eureka", "Refit", "Polly", "Docker", "JWT", "Entity Framework Core", "AWS S3"],
     metrics: [
-      { label: "Report Speed", value: "+45%" },
+      { label: "Report Speed", value: "+75%" },
       { label: "User Roles", value: "3" },
       { label: "Services", value: "7" },
     ],
     live: "https://prepfi.ai",
+  },
+  {
+    id: "travelos",
+    icon: Plane,
+    title: "Travel OS — B2B Travel SaaS Platform",
+    subtitle: "Personal Project · Solo Full Stack Developer",
+    period: "2025 – Present",
+    type: "Production · SaaS",
+    color: "rose",
+    tagline: "A multi-tenant travel SaaS platform, built solo, with HMX Global Travels live as its first tenant.",
+    problem:
+      "Travel agencies need a unified system to run their business — a public storefront for customers, an internal CRM for staff to manage leads through quotes, bookings, and invoices, plus a steady stream of fresh destination content — without stitching together a dozen disconnected tools.",
+    architecture:
+      "A Next.js 16 (App Router) application on Supabase: a public storefront (destinations, packages, blog, themed landing pages) and a ~20-module admin back-office (bookings, invoices, quotes, leads, suppliers, drivers, agencies, and more), all built with Server Actions instead of a separate REST layer. Supabase Auth + Row-Level Security enforce multi-role access across agencies, suppliers, drivers, customers, and staff, modeled over an 80+ migration relational schema. Two independent backend services feed the platform: a TypeScript vendor data-ingestion service (hexagonal/clean architecture) that scrapes and normalizes third-party travel package data via Playwright and publishes it into Supabase on a daily GitHub Actions schedule, and a self-triggering Spring Boot AI content service using Claude models and Ollama that auto-generates destination pages, journeys, and blog content directly into Supabase. A publishing engine keeps the storefront in sync with admin changes — cache invalidation, search index updates, and sitemap regeneration on every content publish.",
+    challenges: [
+      "Keeping a public storefront in sync with constant admin/content changes — solved with a dedicated publishing engine that invalidates caches, refreshes search indexes, and regenerates the sitemap on every publish event",
+      "Two independently-scheduled backend services (TypeScript scraper, Spring Boot AI generator) writing into the same Supabase schema without colliding — strict ownership boundaries per table and idempotent writes",
+      "RBAC across a CRM with many staff roles (agents, admins, suppliers) enforced entirely through Supabase Row-Level Security rather than application-layer checks",
+      "Server Actions for all admin CRUD instead of a parallel REST API — kept the admin surface fast to build and type-safe end-to-end with Zod validation",
+    ],
+    scaling:
+      "Stateless Next.js deployment with Supabase handling auth, data, and RLS-enforced multi-tenancy. The vendor ingestion and AI content services run independently of the web app, decoupling slow/scheduled workloads (scraping, generation) from the request path. Currently processing 500+ leads/month across 53 live travel packages, built end-to-end in 4 months.",
+    stack: ["Next.js (App Router)", "React", "TypeScript", "Supabase", "PostgreSQL", "Spring Boot", "Claude Models", "Ollama", "Playwright", "Tailwind CSS", "Radix UI", "GitHub Actions"],
+    metrics: [
+      { label: "Leads/Month", value: "500+" },
+      { label: "Admin Modules", value: "~20" },
+      { label: "Build Time", value: "4mo" },
+    ],
+    live: "https://hmxglobaltravels.in",
   },
   {
     id: "uber",
@@ -216,6 +246,13 @@ const colorVariants: Record<string, { bg: string; border: string; badge: string;
     badge: "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300",
     tag: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300",
     accent: "text-emerald-600 dark:text-emerald-400",
+  },
+  rose: {
+    bg: "bg-rose-50 dark:bg-rose-950/20",
+    border: "border-rose-200 dark:border-rose-800/40",
+    badge: "bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300",
+    tag: "bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300",
+    accent: "text-rose-600 dark:text-rose-400",
   },
 };
 

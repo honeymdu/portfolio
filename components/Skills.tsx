@@ -7,6 +7,7 @@ const SKILL_GROUPS = [
     skills: [
       { name: "Java", level: 95 },
       { name: "C#", level: 88 },
+      { name: "TypeScript", level: 85 },
       { name: "SQL", level: 85 },
     ],
   },
@@ -16,6 +17,8 @@ const SKILL_GROUPS = [
     skills: [
       { name: "Spring Boot", level: 95 },
       { name: ".NET Core", level: 90 },
+      { name: "Next.js (App Router)", level: 82 },
+      { name: "React", level: 80 },
       { name: "Hibernate ORM", level: 88 },
       { name: "JPA", level: 85 },
       { name: "Maven", level: 80 },
@@ -36,6 +39,7 @@ const SKILL_GROUPS = [
     color: "emerald",
     skills: [
       { name: "PostgreSQL + PostGIS", level: 88 },
+      { name: "Supabase", level: 85 },
       { name: "SQL Server (MSSQL)", level: 85 },
       { name: "MongoDB", level: 75 },
       { name: "Neo4j", level: 70 },
@@ -72,6 +76,7 @@ const TOOLS = [
   "IntelliJ IDEA", "Visual Studio", "VS Code", "Postman", "Docker Desktop",
   "Git", "GitHub", "Bitbucket", "Azure Repos", "UiPath",
   "Hangfire", "Eureka Discovery", "Feign Client", "OSRM API", "Vonage API",
+  "Claude Code", "Claude Models", "Ollama", "Tailwind CSS", "Radix UI",
 ];
 
 const barColorMap: Record<string, string> = {

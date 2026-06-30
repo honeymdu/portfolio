@@ -13,8 +13,8 @@ const TYPING_STRINGS = [
 ];
 
 const STATS = [
-  { value: "3.5+", label: "Years of Experience" },
-  { value: "45%", label: "Perf Gains Delivered" },
+  { value: "4+", label: "Years of Experience" },
+  { value: "75%", label: "Perf Gains Delivered" },
   { value: "90%", label: "AI Translation Accuracy" },
   { value: "1M+", label: "Concurrent User Design" },
 ];

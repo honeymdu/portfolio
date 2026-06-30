@@ -13,7 +13,7 @@ const EXPERIENCE = [
     highlights: [
       {
         icon: Zap,
-        text: "Architected and shipped PrepFi, a B2B EdTech microservices platform on .NET Core + React — delivered role-based access for 3 user personas (teacher, parent, student) and improved report generation speed by 45%.",
+        text: "Architected and shipped PrepFi (live at prepfi.ai), a B2B EdTech microservices platform on .NET Core + React — delivered role-based access for 3 user personas (teacher, parent, student) and improved report generation speed by 75%.",
       },
       {
         icon: TrendingUp,
@@ -25,7 +25,7 @@ const EXPERIENCE = [
       },
       {
         icon: TrendingUp,
-        text: "Built gamified tournament and assessment engine that measurably boosted user engagement and contributed to the 45% speed improvement in report generation workflows.",
+        text: "Built gamified tournament and assessment engine that measurably boosted user engagement and contributed to the 75% speed improvement in report generation workflows.",
       },
       {
         icon: Users,

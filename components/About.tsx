@@ -61,8 +61,8 @@ export default function About() {
           {/* Narrative */}
           <div className="space-y-5">
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
-              I&apos;m a backend-focused engineer with{" "}
-              <span className="text-gray-900 dark:text-white font-semibold">3.5+ years</span>{" "}
+              I&apos;m a backend-focused full stack engineer with{" "}
+              <span className="text-gray-900 dark:text-white font-semibold">4+ years</span>{" "}
               of production experience designing and leading complex distributed systems — from greenfield microservice
               platforms to AI-powered real-time communication infrastructure.
             </p>
@@ -87,14 +87,21 @@ export default function About() {
               decisions that make systems <em>actually scale</em>: schema design, indexing strategy, async boundaries,
               service isolation, and deployment resilience.
             </p>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              Outside of work, I independently designed and built{" "}
+              <span className="text-gray-900 dark:text-white font-semibold">Travel OS</span> — a B2B travel SaaS
+              platform with a Next.js + Supabase storefront and admin CRM, a TypeScript vendor data-ingestion service,
+              and a self-triggering Spring Boot AI content engine powered by Claude models and Ollama. It runs live in
+              production today, with HMX Global Travels as its first tenant.
+            </p>
 
             {/* Quick facts */}
             <div className="pt-4 grid grid-cols-2 gap-4">
               {[
                 ["Location", "Bahadurgarh, India"],
                 ["Current Role", "Project Lead, Servoedge"],
-                ["Primary Stack", "Java · .NET · Spring Boot"],
-                ["Cloud", "GCP · AWS · Azure"],
+                ["Primary Stack", "Java · .NET · Spring Boot · Next.js"],
+                ["Cloud", "GCP · AWS · Azure · Supabase"],
               ].map(([label, value]) => (
                 <div key={label}>
                   <dt className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-0.5">{label}</dt>
