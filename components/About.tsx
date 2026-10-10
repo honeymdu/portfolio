@@ -61,38 +61,22 @@ export default function About() {
           {/* Narrative */}
           <div className="space-y-5">
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
-              I&apos;m a backend-focused full stack engineer with{" "}
-              <span className="text-gray-900 dark:text-white font-semibold">4+ years</span>{" "}
-              of production experience designing and leading complex distributed systems — from greenfield microservice
-              platforms to AI-powered real-time communication infrastructure.
+              I&apos;m a <span className="text-gray-900 dark:text-white font-semibold">Java Backend Developer with 4+ years of experience</span> building production-grade applications, scalable backend services, and distributed systems. My work spans enterprise platforms, microservices architecture, cloud integrations, and AI-powered applications.
             </p>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              My work sits at the intersection of backend engineering, cloud architecture, and applied AI. I don&apos;t
-              just integrate third-party services — I design the architecture around them: the event flows, the retry
-              strategies, the observability layers, and the performance characteristics that determine whether a system
-              survives production load.
+              My core expertise lies in <span className="text-gray-900 dark:text-white font-semibold">Java, Spring Boot, REST API development, microservices, and database engineering</span>. I focus on building reliable backend systems through thoughtful architecture, efficient query design, asynchronous processing, service integration, and performance optimization.
             </p>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              At Servoedge, I led the end-to-end delivery of{" "}
-              <span className="text-gray-900 dark:text-white font-semibold">PrepFi</span> — a B2B EdTech platform on
-              .NET microservices — and a{" "}
-              <span className="text-gray-900 dark:text-white font-semibold">
-                real-time multilingual voice translation system
-              </span>{" "}
-              that processes live call audio, translates across four language pairs, and feeds agent dashboards with
-              zero noticeable lag. That system achieves ~90% domain-specific accuracy in production.
+              Currently, at <span className="text-gray-900 dark:text-white font-semibold">Binary Semantics</span>, I&apos;m working on an enterprise Marine Insurance platform, developing backend APIs and business workflows across client management, policy and certificate processing, endorsements, underwriting approvals, and business insights.
             </p>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              I work across the full backend stack — Java, C#, Spring Boot, .NET Core — and I care deeply about the
-              decisions that make systems <em>actually scale</em>: schema design, indexing strategy, async boundaries,
-              service isolation, and deployment resilience.
+              Previously, at <span className="text-gray-900 dark:text-white font-semibold">Servoedge Technologies</span>, I led backend development across B2B EdTech and AI-powered real-time communication platforms. My work included microservices architecture, cloud integrations, asynchronous processing, and performance optimization.
             </p>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Outside of work, I independently designed and built{" "}
-              <span className="text-gray-900 dark:text-white font-semibold">Travel OS</span> — a B2B travel SaaS
-              platform with a Next.js + Supabase storefront and admin CRM, a TypeScript vendor data-ingestion service,
-              and a self-triggering Spring Boot AI content engine powered by Claude models and Ollama. It runs live in
-              production today, with HMX Global Travels as its first tenant.
+              Beyond professional work, I independently designed and built <span className="text-gray-900 dark:text-white font-semibold">Travel OS</span>, a B2B travel SaaS platform that combines a Next.js storefront, Supabase, a CRM, vendor data ingestion, and a Spring Boot AI content engine powered by Claude models and Ollama. HMX Global Travels operates as its first live tenant.
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              I enjoy solving complex engineering problems, making sound architectural decisions, and building software that is maintainable, efficient, and ready for real-world use.
             </p>
 
             {/* Quick facts */}
