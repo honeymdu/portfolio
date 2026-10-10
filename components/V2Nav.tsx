@@ -4,11 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const PAGES = [
-  { label: "Home",     href: "/v2" },
-  { label: "About",    href: "/v2/about" },
-  { label: "Projects", href: "/v2/projects" },
-  { label: "Skills",   href: "/v2/skills" },
-  { label: "Contact",  href: "/v2/contact" },
+  { label: "Home",       href: "/v2" },
+  { label: "About",      href: "/v2/about" },
+  { label: "Experience", href: "/v2/experience" },
+  { label: "Projects",   href: "/v2/projects" },
+  { label: "Skills",     href: "/v2/skills" },
+  { label: "Contact",    href: "/v2/contact" },
 ];
 
 export default function V2Nav() {
