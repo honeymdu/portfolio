@@ -84,7 +84,7 @@ export default function Hero({ projectsHref = "#projects", contactHref = "#conta
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-500 blur-xl opacity-35 scale-110" />
             <div className="relative w-28 h-28 sm:w-32 sm:h-32">
               <Image
-                src="/profile.jpg"
+                src="/profile.jpeg"
                 alt="Himanshu Mehra"
                 fill
                 className="rounded-full object-cover ring-2 ring-indigo-500/40 shadow-2xl"
